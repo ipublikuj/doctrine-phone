@@ -1,0 +1,52 @@
+{
+	"name"			: "ipub/doctrine-phone",
+	"type"			: "library",
+	"description"	: "Phone number manipulation for Nette Framework and Doctrine 2",
+	"keywords"		: ["nette", "phone", "doctrine", "tools", "ipub", "ipublikuj"],
+	"homepage"		: "https://github.com/iPublikuj/doctrine-phone",
+	"license"		: ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+
+	"authors": [
+		{
+			"name"		: "iPublikuj:cms",
+			"email"		: "info@ipublikuj.eu",
+			"homepage"	: "http://www.ipublikuj.eu/"
+		}
+	],
+
+	"support": {
+		"email"		:"support@ipublikuj.eu",
+		"issues"	:"https://github.com/iPublikuj/doctrine-phone/issues"
+	},
+
+	"require": {
+		"php"	: ">=5.4.0",
+
+		"ipub/phone"	: "~1.1.2",
+
+		"nette/di"			: "~2.2",
+		"nette/utils"		: "~2.2",
+
+		"kdyby/doctrine"		: "~3.0@dev|~2.3@dev",
+		"kdyby/events"			: "~2.3@dev",
+		"kdyby/doctrine-cache"	: "~2.3@dev"
+	},
+
+	"require-dev": {
+		"nette/bootstrap"		: "~2.2",
+		"nette/mail"			: "~2.2",
+		"nette/safe-stream"		: "~2.2",
+		"nette/robot-loader"	: "~2.2",
+		"nette/tester"			: "@dev",
+
+		"tracy/tracy"	: "@dev",
+
+		"janmarek/mockista"	: "@dev"
+	},
+
+	"autoload": {
+		"psr-0": {
+			"IPub\\DoctrinePhone\\": "src/"
+		}
+	}
+}
