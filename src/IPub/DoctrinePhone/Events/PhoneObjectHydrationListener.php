@@ -117,6 +117,9 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	/**
 	 * @param $entity
 	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 *
+	 * @throws Phone\Exceptions\NoValidCountryException
+	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
 	public function postLoad($entity, ORM\Event\LifecycleEventArgs $eventArgs)
 	{
@@ -128,8 +131,8 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			foreach ($phoneMeta['fields'] as $phoneField) {
 				$number = $phoneMeta['class']->getFieldValue($entity, $phoneField);
 
-				if ($number instanceof Phone\Entities\Phone) {
-					return;
+				if ($number instanceof Phone\Entities\Phone || $number === NULL) {
+					continue;
 				}
 
 				$phoneMeta['class']->setFieldValue($entity, $phoneField, Phone\Entities\Phone::fromNumber($number));
@@ -140,6 +143,9 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	/**
 	 * @param $entity
 	 * @param ORM\Event\PreFlushEventArgs $eventArgs
+	 *
+	 * @throws Phone\Exceptions\NoValidCountryException
+	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
 	public function preFlush($entity, ORM\Event\PreFlushEventArgs $eventArgs)
 	{

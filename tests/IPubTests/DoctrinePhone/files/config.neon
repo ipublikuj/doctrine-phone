@@ -7,6 +7,7 @@ common:
 		doctrine: Kdyby\Doctrine\DI\OrmExtension
 		console: Kdyby\Console\DI\ConsoleExtension
 		events: Kdyby\Events\DI\EventsExtension
+		phone: IPub\Phone\DI\PhoneExtension
 
 	services:
 		cacheStorage:
