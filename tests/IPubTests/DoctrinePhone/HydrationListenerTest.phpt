@@ -30,6 +30,7 @@ use IPub\DoctrinePhone\Events;
 use IPub\Phone;
 
 require __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/models/address.php';
 
 /**
  * Registering doctrine phone extension tests
@@ -42,7 +43,7 @@ require __DIR__ . '/../bootstrap.php';
 class HydrationListenerTest extends Tester\TestCase
 {
 	/**
-	 * @var \Nette\DI\Container|\SystemContainer
+	 * @var \Nette\DI\Container
 	 */
 	private $container;
 
@@ -143,8 +144,6 @@ class HydrationListenerTest extends Tester\TestCase
 
 		$config->addConfig(__DIR__ . '/files/config.neon', !isset($config->defaultExtensions['nette']) ? 'v23' : 'v22');
 		$config->addConfig(__DIR__ . '/files/address.neon', $config::NONE);
-
-		require_once __DIR__ . '/models/address.php';
 
 		DoctrinePhone\DI\DoctrinePhoneExtension::register($config);
 
