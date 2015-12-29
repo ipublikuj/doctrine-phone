@@ -54,7 +54,7 @@ class ExtensionTest extends Tester\TestCase
 	 */
 	protected function createContainer()
 	{
-		$rootDir = __DIR__ . '/../';
+		$rootDir = __DIR__ . '/../../';
 
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
