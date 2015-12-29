@@ -29,7 +29,6 @@ use IPub\DoctrinePhone;
 use IPub\DoctrinePhone\Types;
 
 use IPub\Phone;
-use Tracy\Debugger;
 
 class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscriber
 {
@@ -44,9 +43,9 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	private $annotationReader;
 
 	/**
-	 * @var ORM\EntityManager
+	 * @var Common\Persistence\ManagerRegistry
 	 */
-	private $entityManager;
+	private $managerRegistry;
 
 	/**
 	 * @var Phone\Phone
@@ -73,18 +72,18 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	/**
 	 * @param Common\Cache\CacheProvider $cache
 	 * @param Common\Annotations\Reader $annotationReader
-	 * @param ORM\EntityManager $entityManager
+	 * @param Common\Persistence\ManagerRegistry $managerRegistry
 	 * @param Phone\Phone $phoneHelper
 	 */
 	public function __construct(
 		Common\Cache\CacheProvider $cache,
 		Common\Annotations\Reader $annotationReader,
-		ORM\EntityManager $entityManager,
+		Common\Persistence\ManagerRegistry $managerRegistry,
 		Phone\Phone $phoneHelper
 	) {
 		$this->cache = $cache;
 		$this->cache->setNamespace(get_called_class());
-		$this->entityManager = $entityManager;
+		$this->managerRegistry = $managerRegistry;
 		$this->annotationReader = $annotationReader;
 
 		$this->phoneHelper = $phoneHelper;
@@ -116,12 +115,11 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 
 	/**
 	 * @param $entity
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function postLoad($entity, ORM\Event\LifecycleEventArgs $eventArgs)
+	public function postLoad($entity)
 	{
 		if (!$fieldsMap = $this->getEntityPhoneFields($entity)) {
 			return;
@@ -142,12 +140,11 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 
 	/**
 	 * @param $entity
-	 * @param ORM\Event\PreFlushEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function preFlush($entity, ORM\Event\PreFlushEventArgs $eventArgs)
+	public function preFlush($entity)
 	{
 		if (!$fieldsMap = $this->getEntityPhoneFields($entity)) {
 			return;
@@ -176,7 +173,7 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	 */
 	private function getEntityPhoneFields($entity, ORM\Mapping\ClassMetadata $class = NULL)
 	{
-		$class = $class ?: $this->entityManager->getClassMetadata(get_class($entity));
+		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
 
 		if (isset($this->phoneFieldsCache[$class->getName()])) {
 			return $this->phoneFieldsCache[$class->getName()];
@@ -196,7 +193,7 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			foreach ($phoneFields as $phoneField => $mapping) {
 				if (!isset($fieldsMap[$mapping['phoneFieldClass']])) {
 					$fieldsMap[$mapping['phoneFieldClass']] = [
-						'class'		=> $this->entityManager->getClassMetadata($mapping['phoneFieldClass']),
+						'class'		=> $this->managerRegistry->getManager()->getClassMetadata($mapping['phoneFieldClass']),
 						'fields'	=> [$phoneField],
 					];
 
