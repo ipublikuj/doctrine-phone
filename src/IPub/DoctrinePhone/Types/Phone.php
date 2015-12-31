@@ -2,14 +2,14 @@
 /**
  * Phone.php
  *
- * @copyright	More in license.md
- * @license		http://www.ipublikuj.eu
- * @author		Adam Kadlec http://www.ipublikuj.eu
- * @package		iPublikuj:DoctrineMoney!
- * @subpackage	Types
- * @since		5.0
+ * @copyright      More in license.md
+ * @license        http://www.ipublikuj.eu
+ * @author         Adam Kadlec http://www.ipublikuj.eu
+ * @package        iPublikuj:DoctrineMoney!
+ * @subpackage     Types
+ * @since          1.0.0
  *
- * @date		25.12.15
+ * @date           25.12.15
  */
 
 namespace IPub\DoctrinePhone\Types;
@@ -20,6 +20,14 @@ use Doctrine\DBAL\Types;
 
 use IPub;
 
+/**
+ * Doctrine phone data type
+ *
+ * @package        iPublikuj:DoctrinePhone!
+ * @subpackage     Events
+ *
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ */
 class Phone extends Types\StringType
 {
 	const PHONE = 'phone';

@@ -2,14 +2,14 @@
 /**
  * PhoneObjectHydrationListener.php
  *
- * @copyright	More in license.md
- * @license		http://www.ipublikuj.eu
- * @author		Adam Kadlec http://www.ipublikuj.eu
- * @package		iPublikuj:DoctrinePhone!
- * @subpackage	Events
- * @since		5.0
+ * @copyright      More in license.md
+ * @license        http://www.ipublikuj.eu
+ * @author         Adam Kadlec http://www.ipublikuj.eu
+ * @package        iPublikuj:DoctrinePhone!
+ * @subpackage     Events
+ * @since          1.0.0
  *
- * @date		25.12.15
+ * @date           25.12.15
  */
 
 namespace IPub\DoctrinePhone\Events;
@@ -30,6 +30,14 @@ use IPub\DoctrinePhone\Types;
 
 use IPub\Phone;
 
+/**
+ * Doctrine phone hydration listener
+ *
+ * @package        iPublikuj:DoctrinePhone!
+ * @subpackage     Events
+ *
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ */
 class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscriber
 {
 	/**
@@ -80,7 +88,8 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 		Common\Annotations\Reader $annotationReader,
 		Common\Persistence\ManagerRegistry $managerRegistry,
 		Phone\Phone $phoneHelper
-	) {
+	)
+	{
 		$this->cache = $cache;
 		$this->cache->setNamespace(get_called_class());
 		$this->managerRegistry = $managerRegistry;
@@ -125,7 +134,7 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			return;
 		}
 
-		foreach($fieldsMap as $phoneAssoc => $phoneMeta) {
+		foreach ($fieldsMap as $phoneAssoc => $phoneMeta) {
 			foreach ($phoneMeta['fields'] as $phoneField) {
 				$number = $phoneMeta['class']->getFieldValue($entity, $phoneField);
 
@@ -150,7 +159,7 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			return;
 		}
 
-		foreach($fieldsMap as $phoneAssoc => $phoneMeta) {
+		foreach ($fieldsMap as $phoneAssoc => $phoneMeta) {
 			foreach ($phoneMeta['fields'] as $phoneField) {
 				$number = $phoneMeta['class']->getFieldValue($entity, $phoneField);
 
@@ -193,8 +202,8 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			foreach ($phoneFields as $phoneField => $mapping) {
 				if (!isset($fieldsMap[$mapping['phoneFieldClass']])) {
 					$fieldsMap[$mapping['phoneFieldClass']] = [
-						'class'		=> $this->managerRegistry->getManager()->getClassMetadata($mapping['phoneFieldClass']),
-						'fields'	=> [$phoneField],
+						'class'  => $this->managerRegistry->getManager()->getClassMetadata($mapping['phoneFieldClass']),
+						'fields' => [$phoneField],
 					];
 
 					continue;
@@ -233,7 +242,7 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 		}
 
 		return $phoneFields;
-	}	
+	}
 
 	/**
 	 * @param ORM\Mapping\ClassMetadata $class
