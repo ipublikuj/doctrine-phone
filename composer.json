@@ -27,9 +27,9 @@
 		"nette/di"			: "~2.2",
 		"nette/utils"		: "~2.2",
 
-		"kdyby/doctrine"		: "~3.0@dev|~2.3@dev",
-		"kdyby/events"			: "~2.3@dev",
-		"kdyby/doctrine-cache"	: "~2.3@dev"
+		"kdyby/doctrine"		: "~3.0",
+		"kdyby/events"			: "~2.3",
+		"kdyby/doctrine-cache"	: "~2.3"
 	},
 
 	"require-dev": {

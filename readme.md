@@ -6,6 +6,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/ipub/doctrine-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/doctrine-phone)
 [![Composer Downloads](https://img.shields.io/packagist/dt/ipub/doctrine-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/doctrine-phone)
 [![License](https://img.shields.io/packagist/l/ipub/doctrine-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/doctrine-phone)
+[![Dependency Status](https://img.shields.io/versioneye/d/user/projects/5684e010eb4f47003c000b97.svg?style=flat-square)](https://www.versioneye.com/user/projects/5684e010eb4f47003c000b97)
 
 Phone number manipulation for [Nette Framework](http://nette.org/) and [Doctrine 2](http://www.doctrine-project.org/)
 
