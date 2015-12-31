@@ -168,11 +168,11 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 
 	/**
 	 * @param $entity
-	 * @param ORM\Mapping\ClassMetadata|NULL $class
+	 * @param Common\Persistence\Mapping\ClassMetadata|NULL $class
 	 *
 	 * @return array
 	 */
-	private function getEntityPhoneFields($entity, ORM\Mapping\ClassMetadata $class = NULL)
+	private function getEntityPhoneFields($entity, Common\Persistence\Mapping\ClassMetadata $class = NULL)
 	{
 		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
 
