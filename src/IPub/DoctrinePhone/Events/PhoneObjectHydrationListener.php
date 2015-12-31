@@ -113,13 +113,10 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 			return;
 		}
 
-		if (!$this->hasRegisteredListener($class, ORM\Events::postLoad, get_called_class())) {
-			$class->addEntityListener(ORM\Events::postLoad, get_called_class(), ORM\Events::postLoad);
-		}
-
-		if (!$this->hasRegisteredListener($class, ORM\Events::preFlush, get_called_class())) {
-			$class->addEntityListener(ORM\Events::preFlush, get_called_class(), ORM\Events::preFlush);
-		}
+		// Register post load event
+		$this->registerEvent($class, ORM\Events::postLoad);
+		// Register pre flush event
+		$this->registerEvent($class, ORM\Events::preFlush);
 	}
 
 	/**
@@ -129,6 +126,28 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
 	public function postLoad($entity)
+	{
+		$this->postLoadAndPreFlush($entity);
+	}
+
+	/**
+	 * @param $entity
+	 *
+	 * @throws Phone\Exceptions\NoValidCountryException
+	 * @throws Phone\Exceptions\NoValidPhoneException
+	 */
+	public function preFlush($entity)
+	{
+		$this->postLoadAndPreFlush($entity);
+	}
+
+	/**
+	 * @param $entity
+	 *
+	 * @throws Phone\Exceptions\NoValidCountryException
+	 * @throws Phone\Exceptions\NoValidPhoneException
+	 */
+	private function postLoadAndPreFlush($entity)
 	{
 		if (!$fieldsMap = $this->getEntityPhoneFields($entity)) {
 			return;
@@ -143,33 +162,6 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 				}
 
 				$phoneMeta['class']->setFieldValue($entity, $phoneField, Phone\Entities\Phone::fromNumber($number));
-			}
-		}
-	}
-
-	/**
-	 * @param $entity
-	 *
-	 * @throws Phone\Exceptions\NoValidCountryException
-	 * @throws Phone\Exceptions\NoValidPhoneException
-	 */
-	public function preFlush($entity)
-	{
-		if (!$fieldsMap = $this->getEntityPhoneFields($entity)) {
-			return;
-		}
-
-		foreach ($fieldsMap as $phoneAssoc => $phoneMeta) {
-			foreach ($phoneMeta['fields'] as $phoneField) {
-				$number = $phoneMeta['class']->getFieldValue($entity, $phoneField);
-
-				if ($number === NULL) {
-					continue;
-				}
-
-				if (!$number instanceof Phone\Entities\Phone) {
-					$phoneMeta['class']->setFieldValue($entity, $phoneField, Phone\Entities\Phone::fromNumber($number));
-				}
 			}
 		}
 	}
@@ -217,13 +209,13 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 	}
 
 	/**
-	 * @param ORM\Mapping\ClassMetadata $class
+	 * @param Common\Persistence\Mapping\ClassMetadata $class
 	 *
 	 * @return array
 	 *
 	 * @throws ORM\Mapping\MappingException
 	 */
-	private function buildPhoneFields(ORM\Mapping\ClassMetadata $class)
+	private function buildPhoneFields(Common\Persistence\Mapping\ClassMetadata $class)
 	{
 		$phoneFields = [];
 
@@ -242,6 +234,19 @@ class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscr
 		}
 
 		return $phoneFields;
+	}
+
+	/**
+	 * @param ORM\Mapping\ClassMetadata $class
+	 * @param string $eventName
+	 *
+	 * @throws ORM\Mapping\MappingException
+	 */
+	private function registerEvent(ORM\Mapping\ClassMetadata $class, $eventName)
+	{
+		if (!$this->hasRegisteredListener($class, $eventName, get_called_class())) {
+			$class->addEntityListener($eventName, get_called_class(), $eventName);
+		}
 	}
 
 	/**
