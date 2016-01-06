@@ -5,7 +5,7 @@
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
  * @author         Adam Kadlec http://www.ipublikuj.eu
- * @package        iPublikuj:DoctrineMoney!
+ * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Types
  * @since          1.0.0
  *
@@ -24,7 +24,7 @@ use IPub;
  * Doctrine phone data type
  *
  * @package        iPublikuj:DoctrinePhone!
- * @subpackage     Events
+ * @subpackage     Types
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
