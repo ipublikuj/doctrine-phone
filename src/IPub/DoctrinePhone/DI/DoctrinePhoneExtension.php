@@ -21,9 +21,6 @@ use Nette;
 use Nette\DI;
 use Nette\PhpGenerator as Code;
 
-use Kdyby;
-use Kdyby\DoctrineCache;
-
 use IPub;
 use IPub\DoctrinePhone;
 use IPub\DoctrinePhone\Events;
@@ -39,22 +36,12 @@ use IPub\DoctrinePhone\Types;
  */
 class DoctrinePhoneExtension extends DI\CompilerExtension
 {
-	/**
-	 * @var array
-	 */
-	public $defaults = [
-		'cache' => 'default',
-	];
-
 	public function loadConfiguration()
 	{
-		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('subscriber'))
-			->setClass(Events\PhoneObjectSubscriber::CLASS_NAME, [
-				DoctrineCache\DI\Helpers::processCache($this, $config['cache'], 'phone'),
-			]);
+			->setClass(Events\PhoneObjectSubscriber::CLASS_NAME);
 	}
 
 	public function beforeCompile()

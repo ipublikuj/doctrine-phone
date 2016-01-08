@@ -43,11 +43,6 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	const CLASS_NAME = __CLASS__;
 
 	/**
-	 * @var Common\Cache\CacheProvider
-	 */
-	private $cache;
-
-	/**
 	 * @var Common\Annotations\Reader
 	 */
 	private $annotationReader;
@@ -80,20 +75,16 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	}
 
 	/**
-	 * @param Common\Cache\CacheProvider $cache
 	 * @param Common\Annotations\Reader $annotationReader
 	 * @param Common\Persistence\ManagerRegistry $managerRegistry
 	 * @param Phone\Phone $phoneHelper
 	 */
 	public function __construct(
-		Common\Cache\CacheProvider $cache,
 		Common\Annotations\Reader $annotationReader,
 		Common\Persistence\ManagerRegistry $managerRegistry,
 		Phone\Phone $phoneHelper
 	)
 	{
-		$this->cache = $cache;
-		$this->cache->setNamespace(get_called_class());
 		$this->managerRegistry = $managerRegistry;
 		$this->annotationReader = $annotationReader;
 
@@ -123,35 +114,40 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 
 	/**
 	 * @param $entity
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function postLoad($entity)
+	public function postLoad($entity, ORM\Event\LifecycleEventArgs $eventArgs)
 	{
-		$this->postLoadAndPreFlush($entity);
+		$this->postLoadAndPreFlush($entity, $eventArgs);
 	}
 
 	/**
 	 * @param $entity
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function preFlush($entity)
+	public function preFlush($entity, ORM\Event\LifecycleEventArgs $eventArgs)
 	{
-		$this->postLoadAndPreFlush($entity);
+		$this->postLoadAndPreFlush($entity, $eventArgs);
 	}
 
 	/**
 	 * @param $entity
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	private function postLoadAndPreFlush($entity)
+	private function postLoadAndPreFlush($entity, ORM\Event\LifecycleEventArgs $eventArgs)
 	{
-		if (!$fieldsMap = $this->getEntityPhoneFields($entity)) {
+		$cache = $eventArgs->getObjectManager()->getMetadataFactory()->getCacheDriver();
+
+		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache)) {
 			return;
 		}
 
@@ -170,11 +166,12 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 
 	/**
 	 * @param $entity
+	 * @param Common\Cache\CacheProvider $cache
 	 * @param Common\Persistence\Mapping\ClassMetadata|NULL $class
 	 *
 	 * @return array
 	 */
-	private function getEntityPhoneFields($entity, Common\Persistence\Mapping\ClassMetadata $class = NULL)
+	private function getEntityPhoneFields($entity, Common\Cache\CacheProvider $cache, Common\Persistence\Mapping\ClassMetadata $class = NULL)
 	{
 		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
 
@@ -182,12 +179,12 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 			return $this->phoneFieldsCache[$class->getName()];
 		}
 
-		if ($this->cache->contains($class->getName()) === TRUE) {
-			$phoneFields = Utils\Json::decode($this->cache->fetch($class->getName()), Utils\Json::FORCE_ARRAY);
+		if ($cache->contains($class->getName()) === TRUE) {
+			$phoneFields = Utils\Json::decode($cache->fetch($class->getName()), Utils\Json::FORCE_ARRAY);
 
 		} else {
 			$phoneFields = $this->buildPhoneFields($class);
-			$this->cache->save($class->getName(), $phoneFields ? Utils\Json::encode($phoneFields) : FALSE);
+			$cache->save($class->getName(), $phoneFields ? Utils\Json::encode($phoneFields) : FALSE);
 		}
 
 		$fieldsMap = [];
