@@ -121,31 +121,31 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	 */
 	public function postLoad($entity, ORM\Event\LifecycleEventArgs $eventArgs)
 	{
-		$this->postLoadAndPreFlush($entity, $eventArgs);
+		$this->postLoadAndPreFlush($entity, $eventArgs->getObjectManager());
 	}
 
 	/**
 	 * @param $entity
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 * @param ORM\Event\PreFlushEventArgs $eventArgs
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function preFlush($entity, ORM\Event\LifecycleEventArgs $eventArgs)
+	public function preFlush($entity, ORM\Event\PreFlushEventArgs $eventArgs)
 	{
-		$this->postLoadAndPreFlush($entity, $eventArgs);
+		$this->postLoadAndPreFlush($entity, $eventArgs->getEntityManager());
 	}
 
 	/**
 	 * @param $entity
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 * @param Common\Persistence\ObjectManager $objectManager
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	private function postLoadAndPreFlush($entity, ORM\Event\LifecycleEventArgs $eventArgs)
+	private function postLoadAndPreFlush($entity, Common\Persistence\ObjectManager $objectManager)
 	{
-		$cache = $eventArgs->getObjectManager()->getMetadataFactory()->getCacheDriver();
+		$cache = $objectManager->getMetadataFactory()->getCacheDriver();
 
 		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache)) {
 			return;
