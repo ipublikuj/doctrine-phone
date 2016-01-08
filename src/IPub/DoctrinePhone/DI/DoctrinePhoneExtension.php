@@ -15,7 +15,6 @@
 namespace IPub\DoctrinePhone\DI;
 
 use Doctrine;
-use Doctrine\DBAL;
 
 use Nette;
 use Nette\DI;
@@ -48,10 +47,19 @@ class DoctrinePhoneExtension extends DI\CompilerExtension
 	{
 		$builder = $this->getContainerBuilder();
 
-		DBAL\Types\Type::addType(Types\Phone::PHONE, Types\Phone::CLASS_NAME);
-
 		$builder->getDefinition($builder->getByType('Doctrine\ORM\EntityManagerInterface') ?: 'doctrine.default.entityManager')
 			->addSetup('?->getEventManager()->addEventSubscriber(?)', ['@self', $builder->getDefinition($this->prefix('subscriber'))]);
+	}
+
+	/**
+	 * @param Code\ClassType $class
+	 */
+	public function afterCompile(Code\ClassType $class)
+	{
+		parent::afterCompile($class);
+
+		$initialize = $class->methods['initialize'];
+		$initialize->addBody('Doctrine\DBAL\Types\Type::addType(\'' . Types\Phone::PHONE . '\', \'' . Types\Phone::CLASS_NAME . '\');');
 	}
 
 	/**
