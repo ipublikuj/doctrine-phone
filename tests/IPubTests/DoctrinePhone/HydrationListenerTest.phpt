@@ -73,7 +73,7 @@ class HydrationListenerTest extends Tester\TestCase
 	{
 		return [
 			[AddressEntity::getClassName()],
-			[SpecificAddressEntity::getClassName()],
+			//[SpecificAddressEntity::getClassName()],
 		];
 	}
 
