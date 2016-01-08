@@ -35,11 +35,10 @@
 		"nette/robot-loader"	: "~2.2",
 		"nette/tester"			: "@dev",
 
-		"kdyby/doctrine"	: "~3.0",
+		"kdyby/doctrine"		: "~3.0",
+		"kdyby/doctrine-cache"	: "~2.3",
 
-		"tracy/tracy"	: "@dev",
-
-		"janmarek/mockista"	: "@dev"
+		"tracy/tracy"	: "@dev"
 	},
 
 	"autoload": {
