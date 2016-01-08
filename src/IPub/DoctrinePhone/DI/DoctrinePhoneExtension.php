@@ -14,18 +14,20 @@
 
 namespace IPub\DoctrinePhone\DI;
 
+use Doctrine;
+use Doctrine\DBAL;
+
 use Nette;
 use Nette\DI;
 use Nette\PhpGenerator as Code;
 
+use Kdyby;
+use Kdyby\DoctrineCache;
+
 use IPub;
 use IPub\DoctrinePhone;
+use IPub\DoctrinePhone\Events;
 use IPub\DoctrinePhone\Types;
-
-use Kdyby;
-use Kdyby\Doctrine;
-use Kdyby\DoctrineCache;
-use Kdyby\Events;
 
 /**
  * Doctrine phone extension container
@@ -35,7 +37,7 @@ use Kdyby\Events;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class DoctrinePhoneExtension extends DI\CompilerExtension implements Doctrine\DI\IDatabaseTypeProvider
+class DoctrinePhoneExtension extends DI\CompilerExtension
 {
 	/**
 	 * @var array
@@ -49,23 +51,20 @@ class DoctrinePhoneExtension extends DI\CompilerExtension implements Doctrine\DI
 		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
-		$builder->addDefinition($this->prefix('phoneHydrationListener'))
-			->setClass('IPub\DoctrinePhone\Events\PhoneObjectHydrationListener', array(
+		$builder->addDefinition($this->prefix('subscriber'))
+			->setClass(Events\PhoneObjectSubscriber::CLASS_NAME, [
 				DoctrineCache\DI\Helpers::processCache($this, $config['cache'], 'phone'),
-			))
-			->addTag(Events\DI\EventsExtension::TAG_SUBSCRIBER);
+			]);
 	}
 
-	/**
-	 * Returns array of typeName => typeClass
-	 *
-	 * @return array
-	 */
-	public function getDatabaseTypes()
+	public function beforeCompile()
 	{
-		return [
-			Types\Phone::PHONE => 'IPub\DoctrinePhone\Types\Phone',
-		];
+		$builder = $this->getContainerBuilder();
+
+		DBAL\Types\Type::addType(Types\Phone::PHONE, Types\Phone::CLASS_NAME);
+
+		$builder->getDefinition($builder->getByType('Doctrine\ORM\EntityManagerInterface') ?: 'doctrine.default.entityManager')
+			->addSetup('?->getEventManager()->addEventSubscriber(?)', ['@self', $builder->getDefinition($this->prefix('subscriber'))]);
 	}
 
 	/**

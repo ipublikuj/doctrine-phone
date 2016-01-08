@@ -33,7 +33,7 @@ require __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/models/address.php';
 
 /**
- * Registering doctrine phone extension tests
+ * Doctrine phone hydration tests
  *
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Tests
@@ -53,7 +53,7 @@ class HydrationListenerTest extends Tester\TestCase
 	private $em;
 
 	/**
-	 * @var Events\PhoneObjectHydrationListener
+	 * @var Events\PhoneObjectSubscriber
 	 */
 	private $listener;
 
@@ -63,7 +63,7 @@ class HydrationListenerTest extends Tester\TestCase
 
 		$this->container = $this->createContainer();
 		$this->em = $this->container->getByType('Kdyby\Doctrine\EntityManager');
-		$this->listener = $this->container->getByType('IPub\DoctrinePhone\Events\PhoneObjectHydrationListener');
+		$this->listener = $this->container->getByType('IPub\DoctrinePhone\Events\PhoneObjectSubscriber');
 	}
 
 	/**
@@ -85,10 +85,10 @@ class HydrationListenerTest extends Tester\TestCase
 		$class = $this->em->getClassMetadata($className);
 
 		// assert that listener was binded to entity
-		Assert::same(array(
-			ORM\Events::postLoad => array(array('class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectHydrationListener', 'method' => 'postLoad')),
-			ORM\Events::preFlush => array(array('class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectHydrationListener', 'method' => ORM\Events::preFlush)),
-		), $class->entityListeners);
+		Assert::same([
+			ORM\Events::postLoad => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => 'postLoad']],
+			ORM\Events::preFlush => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => ORM\Events::preFlush]],
+		], $class->entityListeners);
 
 		$this->generateDbSchema();
 

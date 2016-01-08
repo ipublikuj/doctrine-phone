@@ -22,6 +22,7 @@ use Tester\Assert;
 
 use IPub;
 use IPub\DoctrinePhone;
+use IPub\DoctrinePhone\Events;
 use IPub\DoctrinePhone\Types;
 
 use Doctrine\DBAL\Types\Type;
@@ -47,6 +48,7 @@ class ExtensionTest extends Tester\TestCase
 		$connection->connect(); // initializes the types
 
 		Assert::true(Type::getType('phone') instanceof Types\Phone);
+		Assert::true($dic->getService('doctrinePhone.subscriber') instanceof Events\PhoneObjectSubscriber);
 	}
 
 	/**

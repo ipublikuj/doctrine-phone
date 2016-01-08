@@ -1,6 +1,6 @@
 <?php
 /**
- * PhoneObjectHydrationListener.php
+ * PhoneObjectSubscriber.php
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
@@ -21,9 +21,6 @@ use Doctrine;
 use Doctrine\Common;
 use Doctrine\ORM;
 
-use Kdyby;
-use Kdyby\Events;
-
 use IPub;
 use IPub\DoctrinePhone;
 use IPub\DoctrinePhone\Types;
@@ -38,8 +35,13 @@ use IPub\Phone;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class PhoneObjectHydrationListener extends Nette\Object implements Events\Subscriber
+class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscriber
 {
+	/**
+	 * Define class name
+	 */
+	const CLASS_NAME = __CLASS__;
+
 	/**
 	 * @var Common\Cache\CacheProvider
 	 */

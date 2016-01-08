@@ -30,6 +30,14 @@ use IPub;
  */
 class Phone extends Types\StringType
 {
+	/**
+	 * Define class name
+	 */
+	const CLASS_NAME = __CLASS__;
+
+	/**
+	 * Data type name
+	 */
 	const PHONE = 'phone';
 
 	/**
