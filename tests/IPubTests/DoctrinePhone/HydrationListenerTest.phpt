@@ -114,10 +114,10 @@ class HydrationListenerTest extends Tester\TestCase
 		Assert::equal(Phone\Entities\Phone::fromNumber('+420234567890'), $address->getPhone());
 
 		// Following loading should not fail
-		$address2 = $this->em->createQueryBuilder("a")
-			->select("a")
-			->from(AddressEntity::getClassName(), "a")
-			->where("a.id = :id")->setParameter("id", 1)
+		$address2 = $this->em->createQueryBuilder()
+			->select('a')
+			->from(AddressEntity::getClassName(), 'a')
+			->where('a.id = :id')->setParameter('id', 1)
 			->getQuery()->getSingleResult();
 
 		Assert::same($address, $address2);
