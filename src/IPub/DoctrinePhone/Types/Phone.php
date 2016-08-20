@@ -73,4 +73,14 @@ class Phone extends Types\StringType
 
 		return $value;
 	}
+
+	/**
+	 * @param Platforms\AbstractPlatform $platform
+	 *
+	 * @return bool
+	 */
+	public function requiresSQLCommentHint(Platforms\AbstractPlatform $platform)
+	{
+		return TRUE;
+	}
 }
