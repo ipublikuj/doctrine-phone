@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     DI
  * @since          1.0.0
@@ -31,7 +31,7 @@ use IPub\DoctrinePhone\Types;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     DI
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class DoctrinePhoneExtension extends DI\CompilerExtension
 {

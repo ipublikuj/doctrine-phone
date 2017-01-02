@@ -38,7 +38,7 @@ require_once __DIR__ . '/models/address.php';
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Tests
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class HydrationListenerTest extends Tester\TestCase
 {

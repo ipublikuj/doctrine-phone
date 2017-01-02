@@ -33,7 +33,7 @@ use IPub\Phone;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Events
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscriber
 {

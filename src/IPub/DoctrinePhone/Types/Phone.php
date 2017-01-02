@@ -26,7 +26,7 @@ use IPub;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Types
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class Phone extends Types\StringType
 {
