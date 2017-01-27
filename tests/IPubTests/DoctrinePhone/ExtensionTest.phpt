@@ -13,6 +13,8 @@
  * @date           26.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPubTests\DoctrinePhone;
 
 use Nette;
@@ -27,7 +29,7 @@ use IPub\DoctrinePhone\Types;
 
 use Doctrine\DBAL\Types\Type;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /**
  * Registering doctrine phone extension tests
@@ -35,7 +37,7 @@ require __DIR__ . '/../bootstrap.php';
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Tests
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class ExtensionTest extends Tester\TestCase
 {
@@ -54,7 +56,7 @@ class ExtensionTest extends Tester\TestCase
 	/**
 	 * @return Nette\DI\Container
 	 */
-	protected function createContainer()
+	protected function createContainer() : Nette\DI\Container
 	{
 		$rootDir = __DIR__ . '/../../';
 
@@ -64,7 +66,7 @@ class ExtensionTest extends Tester\TestCase
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(time())]]);
 		$config->addParameters(['appDir' => $rootDir, 'wwwDir' => $rootDir]);
 
-		$config->addConfig(__DIR__ . '/files/config.neon', !isset($config->defaultExtensions['nette']) ? 'v23' : 'v22');
+		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');
 
 		DoctrinePhone\DI\DoctrinePhoneExtension::register($config);
 

@@ -13,6 +13,8 @@
  * @date           29.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPubTests\DoctrinePhone;
 
 use Nette;
@@ -29,8 +31,8 @@ use IPub\DoctrinePhone\Events;
 
 use IPub\Phone;
 
-require __DIR__ . '/../bootstrap.php';
-require_once __DIR__ . '/models/address.php';
+require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require __DIR__ . DS . 'models' . DS . 'address.php';
 
 /**
  * Doctrine phone hydration tests
@@ -38,17 +40,17 @@ require_once __DIR__ . '/models/address.php';
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Tests
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class HydrationListenerTest extends Tester\TestCase
 {
 	/**
-	 * @var \Nette\DI\Container
+	 * @var Nette\DI\Container
 	 */
 	private $container;
 
 	/**
-	 * @var \Kdyby\Doctrine\EntityManager
+	 * @var ORM\EntityManager
 	 */
 	private $em;
 
@@ -57,6 +59,9 @@ class HydrationListenerTest extends Tester\TestCase
 	 */
 	private $listener;
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function setUp()
 	{
 		parent::setUp();
@@ -69,11 +74,11 @@ class HydrationListenerTest extends Tester\TestCase
 	/**
 	 * @return array
 	 */
-	public function dataEntityClasses()
+	public function dataEntityClasses() : array
 	{
 		return [
 			[AddressEntity::getClassName()],
-			//[SpecificAddressEntity::getClassName()],
+			[SpecificAddressEntity::getClassName()],
 		];
 	}
 
@@ -93,7 +98,9 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->generateDbSchema();
 
 		// Test phone hydration
-		$this->em->persist(new $className('+420234567890'))->flush()->clear();
+		$this->em->persist(new $className('+420234567890'));
+		$this->em->flush();
+		$this->em->clear();
 
 		/** @var AddressEntity $address */
 		$address = $this->em->find($className, 1);
@@ -106,7 +113,9 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->generateDbSchema();
 
 		// Test phone hydration
-		$this->em->persist(new AddressEntity('+420234567890'))->flush()->clear();
+		$this->em->persist(new AddressEntity('+420234567890'));
+		$this->em->flush();
+		$this->em->clear();
 
 		/** @var AddressEntity $order */
 		$address = $this->em->find(AddressEntity::getClassName(), 1);
@@ -123,6 +132,11 @@ class HydrationListenerTest extends Tester\TestCase
 		Assert::same($address, $address2);
 	}
 
+	/**
+	 * @return void
+	 *
+	 * @throws ORM\Tools\ToolsException
+	 */
 	private function generateDbSchema()
 	{
 		$schema = new ORM\Tools\SchemaTool($this->em);
@@ -132,7 +146,7 @@ class HydrationListenerTest extends Tester\TestCase
 	/**
 	 * @return Nette\DI\Container
 	 */
-	protected function createContainer()
+	protected function createContainer() : Nette\DI\Container
 	{
 		$rootDir = __DIR__ . '/../../';
 
@@ -142,8 +156,8 @@ class HydrationListenerTest extends Tester\TestCase
 		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5('withModel')]]);
 		$config->addParameters(['appDir' => $rootDir, 'wwwDir' => $rootDir]);
 
-		$config->addConfig(__DIR__ . '/files/config.neon', !isset($config->defaultExtensions['nette']) ? 'v23' : 'v22');
-		$config->addConfig(__DIR__ . '/files/address.neon', $config::NONE);
+		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');
+		$config->addConfig(__DIR__ . DS . 'files' . DS . 'address.neon');
 
 		DoctrinePhone\DI\DoctrinePhoneExtension::register($config);
 

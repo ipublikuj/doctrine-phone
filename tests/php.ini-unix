@@ -1,5 +1,6 @@
 extension = xdebug.so
 extension = json.so
+extension = intl.so
 extension = pdo.so
 extension = pdo_sqlite.so
 extension = sqlite.so

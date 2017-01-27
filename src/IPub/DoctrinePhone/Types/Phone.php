@@ -12,6 +12,8 @@
  * @date           25.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\DoctrinePhone\Types;
 
 use Doctrine;
@@ -19,6 +21,7 @@ use Doctrine\DBAL\Platforms;
 use Doctrine\DBAL\Types;
 
 use IPub;
+use IPub\Phone\Entities;
 
 /**
  * Doctrine phone data type
@@ -26,15 +29,10 @@ use IPub;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Types
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class Phone extends Types\StringType
 {
-	/**
-	 * Define class name
-	 */
-	const CLASS_NAME = __CLASS__;
-
 	/**
 	 * Data type name
 	 */
@@ -52,11 +50,11 @@ class Phone extends Types\StringType
 	 * @param mixed $value
 	 * @param Platforms\AbstractPlatform $platform
 	 *
-	 * @return IPub\Phone\Entities\Phone
+	 * @return Entities\Phone
 	 */
 	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform)
 	{
-		return $value;
+		return Entities\Phone::fromNumber($value);
 	}
 
 	/**
@@ -67,20 +65,10 @@ class Phone extends Types\StringType
 	 */
 	public function convertToDatabaseValue($value, Platforms\AbstractPlatform $platform)
 	{
-		if ($value instanceof IPub\Phone\Entities\Phone) {
+		if ($value instanceof Entities\Phone) {
 			return $value->getRawOutput();
 		}
 
 		return $value;
-	}
-
-	/**
-	 * @param Platforms\AbstractPlatform $platform
-	 *
-	 * @return bool
-	 */
-	public function requiresSQLCommentHint(Platforms\AbstractPlatform $platform)
-	{
-		return TRUE;
 	}
 }

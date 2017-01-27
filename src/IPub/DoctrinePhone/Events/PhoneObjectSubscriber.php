@@ -12,6 +12,8 @@
  * @date           25.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\DoctrinePhone\Events;
 
 use Nette;
@@ -33,15 +35,10 @@ use IPub\Phone;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Events
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscriber
+final class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscriber
 {
-	/**
-	 * Define class name
-	 */
-	const CLASS_NAME = __CLASS__;
-
 	/**
 	 * @var Common\Annotations\Reader
 	 */
@@ -70,7 +67,7 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	public function getSubscribedEvents()
 	{
 		return [
-			'Doctrine\\ORM\\Event::loadClassMetadata'
+			ORM\Events::loadClassMetadata,
 		];
 	}
 
@@ -93,6 +90,8 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 
 	/**
 	 * @param ORM\Event\LoadClassMetadataEventArgs $eventArgs
+	 *
+	 * @return void
 	 */
 	public function loadClassMetadata(ORM\Event\LoadClassMetadataEventArgs $eventArgs)
 	{
@@ -116,6 +115,8 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	 * @param $entity
 	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
+	 * @return void
+	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
@@ -128,6 +129,8 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	 * @param $entity
 	 * @param ORM\Event\PreFlushEventArgs $eventArgs
 	 *
+	 * @return void
+	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
@@ -139,6 +142,8 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	/**
 	 * @param $entity
 	 * @param Common\Persistence\ObjectManager $objectManager
+	 *
+	 * @return void
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
@@ -171,7 +176,7 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	 *
 	 * @return array
 	 */
-	private function getEntityPhoneFields($entity, Common\Cache\CacheProvider $cache, Common\Persistence\Mapping\ClassMetadata $class = NULL)
+	private function getEntityPhoneFields($entity, Common\Cache\CacheProvider $cache, Common\Persistence\Mapping\ClassMetadata $class = NULL) : array
 	{
 		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
 
@@ -208,13 +213,13 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	}
 
 	/**
-	 * @param Common\Persistence\Mapping\ClassMetadata $class
+	 * @param Common\Persistence\Mapping\ClassMetadata|ORM\Mapping\ClassMetadata $class
 	 *
 	 * @return array
 	 *
 	 * @throws ORM\Mapping\MappingException
 	 */
-	private function buildPhoneFields(Common\Persistence\Mapping\ClassMetadata $class)
+	private function buildPhoneFields(Common\Persistence\Mapping\ClassMetadata $class) : array
 	{
 		$phoneFields = [];
 
@@ -236,12 +241,14 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	}
 
 	/**
-	 * @param ORM\Mapping\ClassMetadata $class
+	 * @param Common\Persistence\Mapping\ClassMetadata|ORM\Mapping\ClassMetadata $class
 	 * @param string $eventName
+	 *
+	 * @return void
 	 *
 	 * @throws ORM\Mapping\MappingException
 	 */
-	private function registerEvent(ORM\Mapping\ClassMetadata $class, $eventName)
+	private function registerEvent(ORM\Mapping\ClassMetadata $class, string $eventName)
 	{
 		if (!$this->hasRegisteredListener($class, $eventName, get_called_class())) {
 			$class->addEntityListener($eventName, get_called_class(), $eventName);
@@ -255,7 +262,7 @@ class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscrib
 	 *
 	 * @return bool
 	 */
-	private static function hasRegisteredListener(ORM\Mapping\ClassMetadata $class, $eventName, $listenerClass)
+	private static function hasRegisteredListener(ORM\Mapping\ClassMetadata $class, string $eventName, string $listenerClass) : bool
 	{
 		if (!isset($class->entityListeners[$eventName])) {
 			return FALSE;

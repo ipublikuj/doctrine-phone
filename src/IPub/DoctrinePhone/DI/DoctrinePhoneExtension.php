@@ -4,13 +4,15 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     DI
  * @since          1.0.0
  *
  * @date           25.12.15
  */
+
+declare(strict_types = 1);
 
 namespace IPub\DoctrinePhone\DI;
 
@@ -31,20 +33,29 @@ use IPub\DoctrinePhone\Types;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     DI
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class DoctrinePhoneExtension extends DI\CompilerExtension
+final class DoctrinePhoneExtension extends DI\CompilerExtension
 {
+	/**
+	 * @return void
+	 */
 	public function loadConfiguration()
 	{
+		// Get container builder
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('subscriber'))
-			->setClass(Events\PhoneObjectSubscriber::CLASS_NAME);
+			->setClass(Events\PhoneObjectSubscriber::class);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function beforeCompile()
 	{
+		parent::beforeCompile();
+
 		$builder = $this->getContainerBuilder();
 
 		$builder->getDefinition($builder->getByType('Doctrine\ORM\EntityManagerInterface') ?: 'doctrine.default.entityManager')
@@ -52,12 +63,13 @@ class DoctrinePhoneExtension extends DI\CompilerExtension
 	}
 
 	/**
-	 * @param Code\ClassType $class
+	 * {@inheritdoc}
 	 */
 	public function afterCompile(Code\ClassType $class)
 	{
 		parent::afterCompile($class);
 
+		/** @var Code\Method $initialize */
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('Doctrine\DBAL\Types\Type::addType(\'' . Types\Phone::PHONE . '\', \'' . Types\Phone::CLASS_NAME . '\');');
 	}
@@ -65,8 +77,10 @@ class DoctrinePhoneExtension extends DI\CompilerExtension
 	/**
 	 * @param Nette\Configurator $config
 	 * @param string $extensionName
+	 *
+	 * @return void
 	 */
-	public static function register(Nette\Configurator $config, $extensionName = 'doctrinePhone')
+	public static function register(Nette\Configurator $config, string $extensionName = 'doctrinePhone')
 	{
 		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler) use ($extensionName) {
 			$compiler->addExtension($extensionName, new DoctrinePhoneExtension);

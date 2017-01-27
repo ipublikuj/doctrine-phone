@@ -13,6 +13,8 @@
  * @date           29.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPubTests\DoctrinePhone;
 
 use Doctrine\ORM\Mapping as ORM;
