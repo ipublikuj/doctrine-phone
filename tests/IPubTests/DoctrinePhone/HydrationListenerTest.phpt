@@ -98,7 +98,7 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->generateDbSchema();
 
 		// Test phone hydration
-		$this->em->persist(new $className('+420234567890'));
+		$this->em->persist(new $className(Phone\Entities\Phone::fromNumber('+420234567890')));
 		$this->em->flush();
 		$this->em->clear();
 
@@ -113,7 +113,7 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->generateDbSchema();
 
 		// Test phone hydration
-		$this->em->persist(new AddressEntity('+420234567890'));
+		$this->em->persist(new AddressEntity(Phone\Entities\Phone::fromNumber('+420234567890')));
 		$this->em->flush();
 		$this->em->clear();
 
