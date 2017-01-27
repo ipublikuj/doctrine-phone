@@ -48,12 +48,18 @@ class AddressEntity extends BaseEntity
 	 */
 	private $phone;
 
-	public function __construct($phone = NULL)
+	/**
+	 * @param Phone\Entities\Phone|NULL $phone
+	 */
+	public function __construct(Phone\Entities\Phone $phone = NULL)
 	{
 		$this->phone = $phone;
 	}
 
-	public function getPhone()
+	/**
+	 * @return Phone\Entities\Phone
+	 */
+	public function getPhone() : Phone\Entities\Phone
 	{
 		return $this->phone;
 	}

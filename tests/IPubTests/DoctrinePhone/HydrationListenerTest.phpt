@@ -153,7 +153,7 @@ class HydrationListenerTest extends Tester\TestCase
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5('withModel')]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5('withModel' . time())]]);
 		$config->addParameters(['appDir' => $rootDir, 'wwwDir' => $rootDir]);
 
 		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');
