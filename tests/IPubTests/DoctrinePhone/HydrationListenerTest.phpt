@@ -108,6 +108,26 @@ class HydrationListenerTest extends Tester\TestCase
 		Assert::equal(Phone\Entities\Phone::fromNumber('+420234567890'), $address->getPhone());
 	}
 
+	/**
+	 * @dataProvider dataEntityClasses
+	 */
+	public function testNullable($className)
+	{
+		$class = $this->em->getClassMetadata($className);
+
+		$this->generateDbSchema();
+
+		// Test phone hydration
+		$this->em->persist(new $className(null));
+		$this->em->flush();
+		$this->em->clear();
+
+		/** @var AddressEntity $address */
+		$address = $this->em->find($className, 1);
+
+		Assert::null($address->getPhone());
+	}
+
 	public function testRepeatedLoading()
 	{
 		$this->generateDbSchema();

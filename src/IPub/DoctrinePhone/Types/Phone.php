@@ -50,11 +50,11 @@ class Phone extends Types\StringType
 	 * @param mixed $value
 	 * @param Platforms\AbstractPlatform $platform
 	 *
-	 * @return Entities\Phone
+	 * @return Entities\Phone|NULL
 	 */
 	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform)
 	{
-		return Entities\Phone::fromNumber($value);
+		return $value === null ? null : Entities\Phone::fromNumber($value);
 	}
 
 	/**

@@ -43,8 +43,8 @@ class AddressEntity extends BaseEntity
 	public $id;
 
 	/**
-	 * @ORM\Column(type="phone")
-	 * @var Phone\Entities\Phone
+	 * @ORM\Column(type="phone", nullable=true)
+	 * @var Phone\Entities\Phone|NULL
 	 */
 	private $phone;
 
@@ -57,9 +57,9 @@ class AddressEntity extends BaseEntity
 	}
 
 	/**
-	 * @return Phone\Entities\Phone
+	 * @return Phone\Entities\Phone|NULL
 	 */
-	public function getPhone() : Phone\Entities\Phone
+	public function getPhone()
 	{
 		return $this->phone;
 	}
