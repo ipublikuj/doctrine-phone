@@ -37,8 +37,10 @@ use IPub\Phone;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class PhoneObjectSubscriber extends Nette\Object implements Common\EventSubscriber
+final class PhoneObjectSubscriber implements Common\EventSubscriber
 {
+	use Nette\SmartObject;
+
 	/**
 	 * @var Common\Annotations\Reader
 	 */
