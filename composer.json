@@ -11,7 +11,7 @@
     "ipublikuj"
   ],
 
-  "homepage" : "https://github.com/iPublikuj/doctrine-phone",
+  "homepage" : "https://github.com/ipublikuj/doctrine-phone",
 
   "license" : [
     "GPL-2.0",
@@ -28,7 +28,7 @@
 
   "support" : {
     "email" : "support@ipublikuj.eu",
-    "issues" : "https://github.com/iPublikuj/doctrine-phone/issues"
+    "issues" : "https://github.com/ipublikuj/doctrine-phone/issues"
   },
 
   "extra" : {
