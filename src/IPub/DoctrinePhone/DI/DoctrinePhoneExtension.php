@@ -46,7 +46,7 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 		$builder = $this->getContainerBuilder();
 
 		$builder->addDefinition($this->prefix('subscriber'))
-			->setClass(Events\PhoneObjectSubscriber::class);
+			->setType(Events\PhoneObjectSubscriber::class);
 	}
 
 	/**

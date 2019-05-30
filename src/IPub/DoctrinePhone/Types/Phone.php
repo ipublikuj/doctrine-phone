@@ -16,11 +16,9 @@ declare(strict_types = 1);
 
 namespace IPub\DoctrinePhone\Types;
 
-use Doctrine;
 use Doctrine\DBAL\Platforms;
 use Doctrine\DBAL\Types;
 
-use IPub;
 use IPub\Phone\Entities;
 
 /**

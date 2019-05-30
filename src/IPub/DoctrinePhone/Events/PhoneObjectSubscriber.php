@@ -19,11 +19,9 @@ namespace IPub\DoctrinePhone\Events;
 use Nette;
 use Nette\Utils;
 
-use Doctrine;
 use Doctrine\Common;
 use Doctrine\ORM;
 
-use IPub;
 use IPub\DoctrinePhone;
 use IPub\DoctrinePhone\Types;
 
@@ -39,6 +37,9 @@ use IPub\Phone;
  */
 final class PhoneObjectSubscriber implements Common\EventSubscriber
 {
+	/**
+	 * Implement nette smart magic
+	 */
 	use Nette\SmartObject;
 
 	/**
@@ -95,8 +96,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return void
 	 */
-	public function loadClassMetadata(ORM\Event\LoadClassMetadataEventArgs $eventArgs)
-	{
+	public function loadClassMetadata(
+		ORM\Event\LoadClassMetadataEventArgs $eventArgs
+	) : void {
 		$class = $eventArgs->getClassMetadata();
 
 		if (!$class instanceof ORM\Mapping\ClassMetadata || $class->isMappedSuperclass || !$class->getReflectionClass()->isInstantiable()) {
@@ -122,8 +124,10 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function postLoad($entity, ORM\Event\LifecycleEventArgs $eventArgs)
-	{
+	public function postLoad(
+		$entity,
+		ORM\Event\LifecycleEventArgs $eventArgs
+	) : void {
 		$this->postLoadAndPreFlush($entity, $eventArgs->getObjectManager());
 	}
 
@@ -136,8 +140,10 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	public function preFlush($entity, ORM\Event\PreFlushEventArgs $eventArgs)
-	{
+	public function preFlush(
+		$entity,
+		ORM\Event\PreFlushEventArgs $eventArgs
+	) : void {
 		$this->postLoadAndPreFlush($entity, $eventArgs->getEntityManager());
 	}
 
@@ -150,8 +156,10 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 */
-	private function postLoadAndPreFlush($entity, Common\Persistence\ObjectManager $objectManager)
-	{
+	private function postLoadAndPreFlush(
+		$entity,
+		Common\Persistence\ObjectManager $objectManager
+	) : void {
 		$cache = $objectManager->getMetadataFactory()->getCacheDriver();
 
 		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache)) {
@@ -178,8 +186,11 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return array
 	 */
-	private function getEntityPhoneFields($entity, Common\Cache\CacheProvider $cache, Common\Persistence\Mapping\ClassMetadata $class = NULL) : array
-	{
+	private function getEntityPhoneFields(
+		$entity,
+		Common\Cache\CacheProvider $cache,
+		Common\Persistence\Mapping\ClassMetadata $class = NULL
+	) : array {
 		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
 
 		if (isset($this->phoneFieldsCache[$class->getName()])) {
@@ -221,8 +232,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws ORM\Mapping\MappingException
 	 */
-	private function buildPhoneFields(Common\Persistence\Mapping\ClassMetadata $class) : array
-	{
+	private function buildPhoneFields(
+		Common\Persistence\Mapping\ClassMetadata $class
+	) : array {
 		$phoneFields = [];
 
 		foreach ($class->getFieldNames() as $fieldName) {
@@ -250,8 +262,10 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws ORM\Mapping\MappingException
 	 */
-	private function registerEvent(ORM\Mapping\ClassMetadata $class, string $eventName)
-	{
+	private function registerEvent(
+		ORM\Mapping\ClassMetadata $class,
+		string $eventName
+	) : void {
 		if (!$this->hasRegisteredListener($class, $eventName, get_called_class())) {
 			$class->addEntityListener($eventName, get_called_class(), $eventName);
 		}
@@ -264,8 +278,11 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return bool
 	 */
-	private static function hasRegisteredListener(ORM\Mapping\ClassMetadata $class, string $eventName, string $listenerClass) : bool
-	{
+	private static function hasRegisteredListener(
+		ORM\Mapping\ClassMetadata $class,
+		string $eventName,
+		string $listenerClass
+	) : bool {
 		if (!isset($class->entityListeners[$eventName])) {
 			return FALSE;
 		}
