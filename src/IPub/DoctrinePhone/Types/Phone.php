@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec http://www.ipublikuj.eu
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Types
  * @since          1.0.0
@@ -27,7 +27,7 @@ use IPub\Phone\Entities;
  * @package        iPublikuj:DoctrinePhone!
  * @subpackage     Types
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class Phone extends Types\StringType
 {
