@@ -1,9 +1,6 @@
 php:
 	date.timezone: Europe/Prague
 
-session:
-	autoStart: false
-
 extensions:
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
