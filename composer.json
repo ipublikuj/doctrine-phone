@@ -47,7 +47,7 @@
     "nette/di" : "~2.4",
     "nette/utils" : "~2.4",
 
-    "ipub/phone" : "^2.9"
+    "ipub/phone" : "^2.0"
   },
 
   "require-dev" : {
