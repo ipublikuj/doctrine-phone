@@ -21,6 +21,8 @@ use Nette;
 
 use Doctrine\ORM;
 
+use Nettrine;
+
 use Tester;
 use Tester\Assert;
 
@@ -50,7 +52,7 @@ class HydrationListenerTest extends Tester\TestCase
 	private $container;
 
 	/**
-	 * @var ORM\EntityManager
+	 * @var Nettrine\ORM\EntityManagerDecorator
 	 */
 	private $em;
 
@@ -67,8 +69,8 @@ class HydrationListenerTest extends Tester\TestCase
 		parent::setUp();
 
 		$this->container = $this->createContainer();
-		$this->em = $this->container->getByType('Kdyby\Doctrine\EntityManager');
-		$this->listener = $this->container->getByType('IPub\DoctrinePhone\Events\PhoneObjectSubscriber');
+		$this->em = $this->container->getByType(Nettrine\ORM\EntityManagerDecorator::class);
+		$this->listener = $this->container->getByType(Events\PhoneObjectSubscriber::class);
 	}
 
 	/**
@@ -77,8 +79,8 @@ class HydrationListenerTest extends Tester\TestCase
 	public function dataEntityClasses() : array
 	{
 		return [
-			[AddressEntity::getClassName()],
-			[SpecificAddressEntity::getClassName()],
+			[AddressEntity::class],
+			[SpecificAddressEntity::class],
 		];
 	}
 
@@ -87,14 +89,6 @@ class HydrationListenerTest extends Tester\TestCase
 	 */
 	public function testFunctional($className)
 	{
-		$class = $this->em->getClassMetadata($className);
-
-		// assert that listener was binded to entity
-		Assert::same([
-			ORM\Events::postLoad => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => 'postLoad']],
-			ORM\Events::preFlush => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => ORM\Events::preFlush]],
-		], $class->entityListeners);
-
 		$this->generateDbSchema();
 
 		// Test phone hydration
@@ -106,6 +100,14 @@ class HydrationListenerTest extends Tester\TestCase
 		$address = $this->em->find($className, 1);
 
 		Assert::equal(Phone\Entities\Phone::fromNumber('+420234567890'), $address->getPhone());
+
+		$class = $this->em->getClassMetadata($className);
+
+		// assert that listener was binded to entity
+		Assert::same([
+			ORM\Events::postLoad => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => ORM\Events::postLoad]],
+			ORM\Events::preFlush => [['class' => 'IPub\\DoctrinePhone\\Events\\PhoneObjectSubscriber', 'method' => ORM\Events::preFlush]],
+		], $class->entityListeners);
 	}
 
 	/**
@@ -138,14 +140,14 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->em->clear();
 
 		/** @var AddressEntity $order */
-		$address = $this->em->find(AddressEntity::getClassName(), 1);
+		$address = $this->em->find(AddressEntity::class, 1);
 
 		Assert::equal(Phone\Entities\Phone::fromNumber('+420234567890'), $address->getPhone());
 
 		// Following loading should not fail
 		$address2 = $this->em->createQueryBuilder()
 			->select('a')
-			->from(AddressEntity::getClassName(), 'a')
+			->from(AddressEntity::class, 'a')
 			->where('a.id = :id')->setParameter('id', 1)
 			->getQuery()->getSingleResult();
 

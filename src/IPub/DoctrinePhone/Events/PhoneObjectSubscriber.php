@@ -48,11 +48,6 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	private $annotationReader;
 
 	/**
-	 * @var Common\Persistence\ManagerRegistry
-	 */
-	private $managerRegistry;
-
-	/**
 	 * @var Phone\Phone
 	 */
 	private $phoneHelper;
@@ -81,11 +76,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 */
 	public function __construct(
 		Common\Annotations\Reader $annotationReader,
-		Common\Persistence\ManagerRegistry $managerRegistry,
 		Phone\Phone $phoneHelper
 	)
 	{
-		$this->managerRegistry = $managerRegistry;
 		$this->annotationReader = $annotationReader;
 
 		$this->phoneHelper = $phoneHelper;
@@ -162,7 +155,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	) : void {
 		$cache = $objectManager->getMetadataFactory()->getCacheDriver();
 
-		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache)) {
+		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache, $objectManager)) {
 			return;
 		}
 
@@ -189,9 +182,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	private function getEntityPhoneFields(
 		$entity,
 		Common\Cache\CacheProvider $cache,
-		Common\Persistence\Mapping\ClassMetadata $class = NULL
+		Common\Persistence\ObjectManager $objectManager
 	) : array {
-		$class = $class ?: $this->managerRegistry->getManager()->getClassMetadata(get_class($entity));
+		$class = $objectManager->getClassMetadata(get_class($entity));
 
 		if (isset($this->phoneFieldsCache[$class->getName()])) {
 			return $this->phoneFieldsCache[$class->getName()];
@@ -211,7 +204,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 			foreach ($phoneFields as $phoneField => $mapping) {
 				if (!isset($fieldsMap[$mapping['phoneFieldClass']])) {
 					$fieldsMap[$mapping['phoneFieldClass']] = [
-						'class'  => $this->managerRegistry->getManager()->getClassMetadata($mapping['phoneFieldClass']),
+						'class'  => $objectManager->getClassMetadata($mapping['phoneFieldClass']),
 						'fields' => [$phoneField],
 					];
 

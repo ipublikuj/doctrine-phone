@@ -19,6 +19,8 @@ namespace IPubTests\DoctrinePhone;
 
 use Nette;
 
+use Doctrine\DBAL;
+
 use Tester;
 use Tester\Assert;
 
@@ -45,8 +47,8 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$dic = $this->createContainer();
 
-		/** @var \Kdyby\Doctrine\Connection $connection */
-		$connection = $dic->getByType('Kdyby\Doctrine\Connection');
+		/** @var \Doctrine\DBAL\Connection $connection */
+		$connection = $dic->getByType(DBAL\Connection::class);
 		$connection->connect(); // initializes the types
 
 		Assert::true(Type::getType('phone') instanceof Types\Phone);
