@@ -19,8 +19,6 @@ namespace IPubTests\DoctrinePhone;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Kdyby\Doctrine\Entities\BaseEntity;
-
 use IPub\Phone;
 
 /**
@@ -33,7 +31,7 @@ use IPub\Phone;
  *    "specific" = "SpecificAddressEntity",
  * })
  */
-class AddressEntity extends BaseEntity
+class AddressEntity
 {
 	/**
 	 * @ORM\Id()

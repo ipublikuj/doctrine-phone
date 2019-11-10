@@ -58,7 +58,7 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 
-		$builder->getDefinition($builder->getByType('Doctrine\ORM\EntityManagerInterface') ?: 'doctrine.default.entityManager')
+		$builder->getDefinition($builder->getByType('Doctrine\ORM\EntityManagerInterface', TRUE))
 			->addSetup('?->getEventManager()->addEventSubscriber(?)', ['@self', $builder->getDefinition($this->prefix('subscriber'))]);
 	}
 
