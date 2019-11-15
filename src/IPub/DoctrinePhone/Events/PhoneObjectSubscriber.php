@@ -150,7 +150,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	/**
 	 * @param $entity
 	 * @param Common\Cache\CacheProvider $cache
-	 * @param Common\Persistence\Mapping\ClassMetadata|NULL $class
+	 * @param Common\Persistence\ObjectManager $objectManager
 	 *
 	 * @return array
 	 */
