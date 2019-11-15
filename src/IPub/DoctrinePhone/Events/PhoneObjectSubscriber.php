@@ -43,16 +43,6 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	use Nette\SmartObject;
 
 	/**
-	 * @var Common\Annotations\Reader
-	 */
-	private $annotationReader;
-
-	/**
-	 * @var Phone\Phone
-	 */
-	private $phoneHelper;
-
-	/**
 	 * @var array
 	 */
 	private $phoneFieldsCache = [];
@@ -67,20 +57,6 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 		return [
 			ORM\Events::loadClassMetadata,
 		];
-	}
-
-	/**
-	 * @param Common\Annotations\Reader $annotationReader
-	 * @param Common\Persistence\ManagerRegistry $managerRegistry
-	 * @param Phone\Phone $phoneHelper
-	 */
-	public function __construct(
-		Common\Annotations\Reader $annotationReader,
-		Phone\Phone $phoneHelper
-	) {
-		$this->annotationReader = $annotationReader;
-
-		$this->phoneHelper = $phoneHelper;
 	}
 
 	/**
