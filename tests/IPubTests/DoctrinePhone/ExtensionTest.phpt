@@ -1,6 +1,7 @@
 <?php
 /**
  * Test: IPub\DoctrinePhone\Extension
+ *
  * @testCase
  *
  * @copyright      More in license.md
@@ -65,7 +66,7 @@ class ExtensionTest extends Tester\TestCase
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5('extensionTest'  . time())]]);
+		$config->addParameters(['container' => ['class' => 'SystemContainer_' . md5('extensionTest' . time())]]);
 		$config->addParameters(['appDir' => $rootDir, 'wwwDir' => $rootDir]);
 
 		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');

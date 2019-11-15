@@ -52,7 +52,7 @@ class Phone extends Types\StringType
 	 */
 	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform)
 	{
-		return $value === null ? null : Entities\Phone::fromNumber($value);
+		return $value === NULL ? NULL : Entities\Phone::fromNumber($value);
 	}
 
 	/**

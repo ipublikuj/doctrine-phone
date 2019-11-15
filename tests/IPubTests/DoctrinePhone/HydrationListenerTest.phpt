@@ -1,6 +1,7 @@
 <?php
 /**
  * Test: IPub\DoctrinePhone\HydrationListener
+ *
  * @testCase
  *
  * @copyright      More in license.md
@@ -120,7 +121,7 @@ class HydrationListenerTest extends Tester\TestCase
 		$this->generateDbSchema();
 
 		// Test phone hydration
-		$this->em->persist(new $className(null));
+		$this->em->persist(new $className(NULL));
 		$this->em->flush();
 		$this->em->clear();
 

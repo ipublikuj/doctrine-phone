@@ -1,6 +1,7 @@
 <?php
 /**
  * Test: IPub\DoctrinePhone\Models
+ *
  * @testCase
  *
  * @copyright      More in license.md

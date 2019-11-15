@@ -77,8 +77,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	public function __construct(
 		Common\Annotations\Reader $annotationReader,
 		Phone\Phone $phoneHelper
-	)
-	{
+	) {
 		$this->annotationReader = $annotationReader;
 
 		$this->phoneHelper = $phoneHelper;
