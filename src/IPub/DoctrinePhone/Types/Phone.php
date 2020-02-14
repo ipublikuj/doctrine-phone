@@ -20,6 +20,7 @@ use Doctrine\DBAL\Platforms;
 use Doctrine\DBAL\Types;
 
 use IPub\Phone\Entities;
+use IPub\Phone\Exceptions;
 
 /**
  * Doctrine phone data type
@@ -49,6 +50,9 @@ class Phone extends Types\StringType
 	 * @param Platforms\AbstractPlatform $platform
 	 *
 	 * @return Entities\Phone|NULL
+	 *
+	 * @throws Exceptions\NoValidCountryException
+	 * @throws Exceptions\NoValidPhoneException
 	 */
 	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform)
 	{

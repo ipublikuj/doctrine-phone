@@ -6,3 +6,7 @@ extension = php_intl.dll
 extension = php_pdo.dll
 extension = php_pdo_sqlite.dll
 extension = php_sqlite..dll
+extension = php_tokenizer..dll
+extension = php_ctype..dll
+extension = php_iconv..dll
+extension = php_mbstring..dll

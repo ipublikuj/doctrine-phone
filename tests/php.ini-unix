@@ -4,6 +4,10 @@ extension = intl.so
 extension = pdo.so
 extension = pdo_sqlite.so
 extension = sqlite.so
+extension = tokenizer.so
+extension = ctype.so
+extension = iconv.so
+extension = mbstring.so
 
 [xdebug]
 xdebug.enable = On

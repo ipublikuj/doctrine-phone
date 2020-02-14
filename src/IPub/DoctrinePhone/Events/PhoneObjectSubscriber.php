@@ -16,11 +16,15 @@ declare(strict_types = 1);
 
 namespace IPub\DoctrinePhone\Events;
 
+use ReflectionClass;
+use ReflectionException;
+
 use Nette;
 use Nette\Utils;
 
 use Doctrine\Common;
 use Doctrine\ORM;
+use Doctrine\Persistence;
 
 use IPub\DoctrinePhone;
 use IPub\DoctrinePhone\Types;
@@ -63,6 +67,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @param ORM\Event\LoadClassMetadataEventArgs $eventArgs
 	 *
 	 * @return void
+	 *
+	 * @throws ORM\Mapping\MappingException
+	 * @throws ReflectionException
 	 */
 	public function loadClassMetadata(
 		ORM\Event\LoadClassMetadataEventArgs $eventArgs
@@ -91,6 +98,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
 	 */
 	public function postLoad(
 		$entity,
@@ -107,6 +115,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
 	 */
 	public function preFlush(
 		$entity,
@@ -123,14 +132,13 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
 	 */
 	private function postLoadAndPreFlush(
 		$entity,
 		Common\Persistence\ObjectManager $objectManager
 	) : void {
-		$cache = $objectManager->getMetadataFactory()->getCacheDriver();
-
-		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $cache, $objectManager)) {
+		if (!$fieldsMap = $this->getEntityPhoneFields($entity, $objectManager)) {
 			return;
 		}
 
@@ -149,14 +157,14 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 
 	/**
 	 * @param $entity
-	 * @param Common\Cache\CacheProvider $cache
 	 * @param Common\Persistence\ObjectManager $objectManager
 	 *
 	 * @return array
+	 *
+	 * @throws ReflectionException
 	 */
 	private function getEntityPhoneFields(
 		$entity,
-		Common\Cache\CacheProvider $cache,
 		Common\Persistence\ObjectManager $objectManager
 	) : array {
 		$class = $objectManager->getClassMetadata(get_class($entity));
@@ -165,13 +173,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 			return $this->phoneFieldsCache[$class->getName()];
 		}
 
-		if ($cache->contains($class->getName()) === TRUE) {
-			$phoneFields = Utils\Json::decode($cache->fetch($class->getName()), Utils\Json::FORCE_ARRAY);
-
-		} else {
-			$phoneFields = $this->buildPhoneFields($class);
-			$cache->save($class->getName(), $phoneFields ? Utils\Json::encode($phoneFields) : FALSE);
-		}
+		$phoneFields = $this->buildPhoneFields($class);
 
 		$fieldsMap = [];
 
@@ -194,14 +196,14 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param Common\Persistence\Mapping\ClassMetadata|ORM\Mapping\ClassMetadata $class
+	 * @param Persistence\Mapping\ClassMetadata $class
 	 *
 	 * @return array
 	 *
-	 * @throws ORM\Mapping\MappingException
+	 * @throws ReflectionException
 	 */
 	private function buildPhoneFields(
-		Common\Persistence\Mapping\ClassMetadata $class
+		Persistence\Mapping\ClassMetadata $class
 	) : array {
 		$phoneFields = [];
 
@@ -212,7 +214,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 				continue;
 			}
 
-			$classReflection = $class->isInheritedField($fieldName) ? new \ReflectionClass($mapping['declared']) : $class->getReflectionClass();
+			$classReflection = $class->isInheritedField($fieldName) ? new ReflectionClass($mapping['declared']) : $class->getReflectionClass();
 
 			$phoneFields[$fieldName] = [
 				'phoneFieldClass' => $classReflection->getName(),
