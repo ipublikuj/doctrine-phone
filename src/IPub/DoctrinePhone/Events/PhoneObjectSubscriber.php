@@ -20,7 +20,6 @@ use ReflectionClass;
 use ReflectionException;
 
 use Nette;
-use Nette\Utils;
 
 use Doctrine\Common;
 use Doctrine\ORM;
