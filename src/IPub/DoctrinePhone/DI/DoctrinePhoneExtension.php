@@ -80,8 +80,10 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 	 *
 	 * @return void
 	 */
-	public static function register(Nette\Configurator $config, string $extensionName = 'doctrinePhone')
-	{
+	public static function register(
+		Nette\Configurator $config,
+		string $extensionName = 'doctrinePhone'
+	) : void {
 		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler) use ($extensionName) {
 			$compiler->addExtension($extensionName, new DoctrinePhoneExtension);
 		};

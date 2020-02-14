@@ -48,7 +48,7 @@ class ExtensionTest extends Tester\TestCase
 	{
 		$dic = $this->createContainer();
 
-		/** @var \Doctrine\DBAL\Connection $connection */
+		/** @var DBAL\Connection $connection */
 		$connection = $dic->getByType(DBAL\Connection::class);
 		$connection->connect(); // initializes the types
 

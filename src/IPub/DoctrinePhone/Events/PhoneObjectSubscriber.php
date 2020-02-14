@@ -16,6 +16,9 @@ declare(strict_types = 1);
 
 namespace IPub\DoctrinePhone\Events;
 
+use ReflectionClass;
+use ReflectionException;
+
 use Nette;
 use Nette\Utils;
 
@@ -63,6 +66,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @param ORM\Event\LoadClassMetadataEventArgs $eventArgs
 	 *
 	 * @return void
+	 *
+	 * @throws ORM\Mapping\MappingException
+	 * @throws ReflectionException
 	 */
 	public function loadClassMetadata(
 		ORM\Event\LoadClassMetadataEventArgs $eventArgs
@@ -91,6 +97,8 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
+	 * @throws Utils\JsonException
 	 */
 	public function postLoad(
 		$entity,
@@ -107,6 +115,8 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
+	 * @throws Utils\JsonException
 	 */
 	public function preFlush(
 		$entity,
@@ -123,6 +133,8 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
+	 * @throws ReflectionException
+	 * @throws Utils\JsonException
 	 */
 	private function postLoadAndPreFlush(
 		$entity,
@@ -153,6 +165,9 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 * @param Common\Persistence\ObjectManager $objectManager
 	 *
 	 * @return array
+	 *
+	 * @throws ReflectionException
+	 * @throws Utils\JsonException
 	 */
 	private function getEntityPhoneFields(
 		$entity,
@@ -198,7 +213,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return array
 	 *
-	 * @throws ORM\Mapping\MappingException
+	 * @throws ReflectionException
 	 */
 	private function buildPhoneFields(
 		Common\Persistence\Mapping\ClassMetadata $class
@@ -212,7 +227,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 				continue;
 			}
 
-			$classReflection = $class->isInheritedField($fieldName) ? new \ReflectionClass($mapping['declared']) : $class->getReflectionClass();
+			$classReflection = $class->isInheritedField($fieldName) ? new ReflectionClass($mapping['declared']) : $class->getReflectionClass();
 
 			$phoneFields[$fieldName] = [
 				'phoneFieldClass' => $classReflection->getName(),
