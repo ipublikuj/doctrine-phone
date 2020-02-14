@@ -95,6 +95,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return void
 	 *
+	 * @throws ORM\Mapping\MappingException
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 * @throws ReflectionException
@@ -113,6 +114,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return void
 	 *
+	 * @throws ORM\Mapping\MappingException
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 * @throws ReflectionException
@@ -131,6 +133,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return void
 	 *
+	 * @throws ORM\Mapping\MappingException
 	 * @throws Phone\Exceptions\NoValidCountryException
 	 * @throws Phone\Exceptions\NoValidPhoneException
 	 * @throws ReflectionException
@@ -166,6 +169,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return array
 	 *
+	 * @throws ORM\Mapping\MappingException
 	 * @throws ReflectionException
 	 * @throws Utils\JsonException
 	 */
@@ -181,7 +185,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 		}
 
 		if ($cache->contains($class->getName()) === TRUE) {
-			$phoneFields = Utils\Json::decode($cache->fetch($class->getName()), Utils\Json::FORCE_ARRAY);
+			$phoneFields = Utils\Json::decode((string) $cache->fetch($class->getName()), Utils\Json::FORCE_ARRAY);
 
 		} else {
 			$phoneFields = $this->buildPhoneFields($class);
@@ -213,6 +217,7 @@ final class PhoneObjectSubscriber implements Common\EventSubscriber
 	 *
 	 * @return array
 	 *
+	 * @throws ORM\Mapping\MappingException
 	 * @throws ReflectionException
 	 */
 	private function buildPhoneFields(
