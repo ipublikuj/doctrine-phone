@@ -1,0 +1,4 @@
+nettrineOrmAnnotations:
+	mapping: [
+		Tests\Cases\Models: %appDir%libs/models
+	]

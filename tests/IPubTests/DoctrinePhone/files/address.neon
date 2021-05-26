@@ -1,3 +1,0 @@
-nettrineOrmAnnotations:
-	paths:
-		- %appDir%IPubTests/DoctrinePhone/models

@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * DoctrinePhoneExtension.php
  *
- * @copyright      More in license.md
+ * @copyright      More in LICENSE.md
  * @license        http://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:DoctrinePhone!
@@ -12,20 +13,14 @@
  * @date           25.12.15
  */
 
-declare(strict_types = 1);
-
 namespace IPub\DoctrinePhone\DI;
 
 use Doctrine;
-
+use IPub\DoctrinePhone\Events;
+use IPub\DoctrinePhone\Types;
 use Nette;
 use Nette\DI;
 use Nette\PhpGenerator as Code;
-
-use IPub;
-use IPub\DoctrinePhone;
-use IPub\DoctrinePhone\Events;
-use IPub\DoctrinePhone\Types;
 
 /**
  * Doctrine phone extension container
@@ -37,8 +32,24 @@ use IPub\DoctrinePhone\Types;
  */
 final class DoctrinePhoneExtension extends DI\CompilerExtension
 {
+
 	/**
+	 * @param Nette\Configurator $config
+	 * @param string $extensionName
+	 *
 	 * @return void
+	 */
+	public static function register(
+		Nette\Configurator $config,
+		string $extensionName = 'doctrinePhone'
+	): void {
+		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler) use ($extensionName): void {
+			$compiler->addExtension($extensionName, new DoctrinePhoneExtension());
+		};
+	}
+
+	/**
+	 * {@inheritdoc}
 	 */
 	public function loadConfiguration()
 	{
@@ -52,14 +63,25 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 	/**
 	 * {@inheritdoc}
 	 */
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		parent::beforeCompile();
 
+		// Get container builder
 		$builder = $this->getContainerBuilder();
 
-		$builder->getDefinition($builder->getByType(Doctrine\ORM\EntityManagerInterface::class, TRUE))
-			->addSetup('?->getEventManager()->addEventSubscriber(?)', ['@self', $builder->getDefinition($this->prefix('subscriber'))]);
+		$emServiceName = $builder->getByType(Doctrine\ORM\EntityManagerInterface::class, true);
+
+		if ($emServiceName !== null) {
+			/** @var DI\Definitions\ServiceDefinition $emService */
+			$emService = $builder->getDefinition($emServiceName);
+
+			$emService
+				->addSetup('?->getEventManager()->addEventSubscriber(?)', [
+					'@self',
+					$builder->getDefinition($this->prefix('subscriber')),
+				]);
+		}
 	}
 
 	/**
@@ -69,23 +91,8 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 	{
 		parent::afterCompile($class);
 
-		/** @var Code\Method $initialize */
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('if (!Doctrine\DBAL\Types\Type::hasType(\'' . Types\Phone::PHONE . '\')) { Doctrine\DBAL\Types\Type::addType(\'' . Types\Phone::PHONE . '\', \'' . Types\Phone::class . '\'); }');
 	}
 
-	/**
-	 * @param Nette\Configurator $config
-	 * @param string $extensionName
-	 *
-	 * @return void
-	 */
-	public static function register(
-		Nette\Configurator $config,
-		string $extensionName = 'doctrinePhone'
-	) : void {
-		$config->onCompile[] = function (Nette\Configurator $config, Nette\DI\Compiler $compiler) use ($extensionName) {
-			$compiler->addExtension($extensionName, new DoctrinePhoneExtension);
-		};
-	}
 }

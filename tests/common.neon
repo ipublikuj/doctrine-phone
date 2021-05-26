@@ -10,6 +10,7 @@ extensions:
 	nettrineOrmAnnotations	: Nettrine\ORM\DI\OrmAnnotationsExtension
 	nettrineOrmConsole		: Nettrine\ORM\DI\OrmConsoleExtension
 	nettrineOrmCache		: Nettrine\ORM\DI\OrmCacheExtension
+	ipubPhone				: IPub\Phone\DI\PhoneExtension
 
 contributteConsole:
 	name: iPublikuj:Packages!
@@ -33,3 +34,6 @@ nettrineAnnotations:
 nettrineOrm:
 	configuration:
 		proxyDir	: %tempDir%/cache/doctrine.proxies
+
+nettrineOrmAnnotations:
+	mapping: []

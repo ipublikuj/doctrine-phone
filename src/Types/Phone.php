@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
+
 /**
  * Phone.php
  *
- * @copyright      More in license.md
+ * @copyright      More in LICENSE.md
  * @license        http://www.ipublikuj.eu
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:DoctrinePhone!
@@ -12,13 +13,10 @@
  * @date           25.12.15
  */
 
-declare(strict_types = 1);
-
 namespace IPub\DoctrinePhone\Types;
 
 use Doctrine\DBAL\Platforms;
 use Doctrine\DBAL\Types;
-
 use IPub\Phone\Entities;
 use IPub\Phone\Exceptions;
 
@@ -32,15 +30,12 @@ use IPub\Phone\Exceptions;
  */
 class Phone extends Types\StringType
 {
-	/**
-	 * Data type name
-	 */
-	const PHONE = 'phone';
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+	// Data type name
+	public const PHONE = 'phone';
+
+	/** @return string */
+	public function getName(): string
 	{
 		return self::PHONE;
 	}
@@ -49,21 +44,22 @@ class Phone extends Types\StringType
 	 * @param mixed $value
 	 * @param Platforms\AbstractPlatform $platform
 	 *
-	 * @return Entities\Phone|NULL
+	 * @return Entities\Phone|null
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 * @throws Exceptions\NoValidPhoneException
 	 */
-	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform)
+	// phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	public function convertToPHPValue($value, Platforms\AbstractPlatform $platform): ?Entities\Phone
 	{
-		return $value === NULL ? NULL : Entities\Phone::fromNumber($value);
+		return $value === null ? null : Entities\Phone::fromNumber($value);
 	}
 
 	/**
 	 * @param mixed $value
 	 * @param Platforms\AbstractPlatform $platform
 	 *
-	 * @return mixed|NULL|string
+	 * @return mixed|string|null
 	 */
 	public function convertToDatabaseValue($value, Platforms\AbstractPlatform $platform)
 	{
@@ -79,8 +75,10 @@ class Phone extends Types\StringType
 	 *
 	 * @return bool
 	 */
-	public function requiresSQLCommentHint(Platforms\AbstractPlatform $platform)
+	// phpcs:ignore Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps
+	public function requiresSQLCommentHint(Platforms\AbstractPlatform $platform): bool
 	{
-		return TRUE;
+		return true;
 	}
+
 }

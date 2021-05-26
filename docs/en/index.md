@@ -4,13 +4,13 @@ This extension brings you a phone number extension into your doctrine entities. 
 
 ## Installation
 
-The best way to install ipub/doctrine-phone is using [Composer](http://getcomposer.org/):
+The best way to install **ipub/doctrine-phone** is using [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require ipub/doctrine-phone
+composer require ipub/doctrine-phone
 ```
 
-After that you have to register extension in config.neon.
+After that, you have to register extension in config.neon.
 
 ```neon
 extensions:
@@ -29,6 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AddressEntity extends BaseEntity
 {
+
     // ...
 
     /**
@@ -52,6 +53,7 @@ class AddressEntity extends BaseEntity
     {
         $this->phone = $phone
     }
+
 }
 ```
 
