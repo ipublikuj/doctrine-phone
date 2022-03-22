@@ -91,7 +91,7 @@ final class DoctrinePhoneExtension extends DI\CompilerExtension
 	{
 		parent::afterCompile($class);
 
-		$initialize = $class->methods['initialize'];
+		$initialize = $class->getMethod('initialize');
 		$initialize->addBody('if (!Doctrine\DBAL\Types\Type::hasType(\'' . Types\Phone::PHONE . '\')) { Doctrine\DBAL\Types\Type::addType(\'' . Types\Phone::PHONE . '\', \'' . Types\Phone::class . '\'); }');
 	}
 
